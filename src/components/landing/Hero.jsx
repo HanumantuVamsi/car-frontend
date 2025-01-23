@@ -20,7 +20,7 @@ const Hero = () => {
                 <div><FiArrowRight/></div>
                 </div></button> 
                 </Link>:
-                <Link to="/register"><button className=' my-4 px-4 py-2 bg-white text-black font-semibold rounded-md hover:scale-90 duration-300'>
+                <Link to="/login"><button className=' my-4 px-4 py-2 bg-white text-black font-semibold rounded-md hover:scale-90 duration-300'>
                 <div className='flex items-center justify-center gap-3'>
                 <div>Book Now</div>
                 <div><FiArrowRight/></div>

@@ -1,19 +1,23 @@
-import React, { createContext, useState, useEffect } from 'react';
+import React, { createContext, useState, useEffect, useContext } from 'react';
 import axiosInstance from '../config/axiosConfig';
+import { AuthContext } from './AuthContext';
 
 export const CarContext = createContext();
 
 export const CarProvider = ({ children }) => {
   const [cars, setCars] = useState([]);
+  const {authState} = useContext(AuthContext);
   const [selectedCar, setSelectedCar] = useState(null);
 
   useEffect(() => {
     const getCars = async () => {
       try {
         const token = localStorage.getItem('token');
-        const response = await axiosInstance.get('/api/cars/', {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const response = await axiosInstance.get('/api/cars/'
+        //   , {
+        //   headers: { Authorization: `Bearer ${token}` },
+        // }
+      );
 
         setCars(response.data);
       } catch (err) {
@@ -22,7 +26,7 @@ export const CarProvider = ({ children }) => {
     };
 
     getCars();
-  }, []);
+  }, [authState]);
 
   const fetchSelectedCar = async (carId) => {
     try {

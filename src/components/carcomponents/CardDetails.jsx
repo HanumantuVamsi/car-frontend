@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import axiosInstance from '../../config/axiosConfig';
 import { CarContext } from '../../context/CarContext';
 import { createCarImage } from '../../utils/createcar';
@@ -9,14 +9,17 @@ const CarDetails = () => {
   const { selectedCar, setSelectedCar } = useContext(CarContext);
   const [reviews, setReviews] = useState([]);
   const { carId } = useParams();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchCarDetails = async () => {
       try {
         const token = localStorage.getItem('token');
-        const response = await axiosInstance.get(`/api/cars/${carId}`, {
-            headers: { Authorization: `Bearer ${token}` },
-          });
+        const response = await axiosInstance.get(`/api/cars/${carId}`
+          // , {
+          //   headers: { Authorization: `Bearer ${token}` },
+          // }
+        );
         setSelectedCar(response.data);
       } catch (error) {
         console.error(error);
@@ -26,9 +29,11 @@ const CarDetails = () => {
     const fetchReviews = async () => {
       // Sample reviews data
        const token = localStorage.getItem('token');
-       const response = await axiosInstance.get(`/api/review/${carId}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+       const response = await axiosInstance.get(`/api/review/${carId}`
+      //   , {
+      //   headers: { Authorization: `Bearer ${token}` },
+      // }
+    );
       setReviews(response.data);
     };
 
@@ -71,6 +76,7 @@ const CarDetails = () => {
                 selectedCar.status === 'BOOKED' ? 'bg-gray-500 cursor-not-allowed' : 'bg-indigo-500 hover:bg-indigo-700 transition duration-300'
               }`}
               disabled={selectedCar.status === 'BOOKED'}
+              onClick={()=>navigate('/booking')}
             >
               {selectedCar.status === 'BOOKED' ? 'Not Available' : 'Book Now'}
             </button>
@@ -78,6 +84,9 @@ const CarDetails = () => {
         </div>
         <div className="bg-gray-700 rounded-lg p-4 text-white">
           <h3 className="text-2xl font-semibold mb-4">Reviews</h3>
+          {
+            reviews.length===0 && <p className='text-yellow-300'>No Reviews</p>
+          }
           {reviews.map((review, index) => (
             <div key={index} className="mb-4">
               <h4 className="text-xl font-bold">{review.username}</h4>

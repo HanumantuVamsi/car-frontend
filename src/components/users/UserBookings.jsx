@@ -1,24 +1,21 @@
 import React, { useEffect, useState } from 'react';
 import axiosInstance from '../../config/axiosConfig';
-import BookingCard from './BookingCard';
+import BookingCard from '../booking/BookingCard';
 import Navbar from '../landing/Navbar';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate,useParams } from 'react-router-dom';
 
-const MyBookings = () => {
+const UserBookings = () => {
   const [bookings, setBookings] = useState([]);
   const [carNameOrModel, setCarNameOrModel] = useState('');
   const [statusFilter, setStatusFilter] = useState('ALL');
+  const { userId } = useParams();
 
-  const navigate = useNavigate();
+  
 
   useEffect(() => {
     const fetchBookings = async () => {
       try {
-        const token = localStorage.getItem('token');
-        const response = await axiosInstance.get('/api/bookings/id'
-        //   , {
-        //   headers: { Authorization: `Bearer ${token}` },
-        // }
+        const response = await axiosInstance.get(`/api/bookings/${userId}`
       );
         setBookings(response.data);
       } catch (err) {
@@ -28,6 +25,10 @@ const MyBookings = () => {
 
     fetchBookings();
   }, []);
+
+  const handleDeleteUser = (userId) => {
+    setUsers(users.filter(user => user.id !== userId));
+  };
 
   const handleCancelBooking = (bookId) => {
     setBookings(bookings.filter((booking) => booking.bookId !== bookId));
@@ -44,8 +45,9 @@ const MyBookings = () => {
     <>
       <Navbar />
       <div className="p-8">
-        <h1 className="text-2xl font-bold text-white mb-4">My Bookings</h1>
+        <h1 className="text-2xl font-bold text-white mb-4">User Bookings</h1>
         <div className="mb-4 flex justify-between">
+      
           <input
             type="text"
             placeholder="Search by car name or model..."
@@ -64,6 +66,7 @@ const MyBookings = () => {
             <option value="COMPLETED">Completed</option>
           </select>
         </div>
+          {bookings.length===0&&<p className='text-center text-xl md:text-3xl text-white font-semibold'>No Bookings</p>}
         <div className="flex flex-wrap">
           {filteredBookings.map((booking) => (
             <BookingCard key={booking.bookId} booking={booking} onCancel={handleCancelBooking} />
@@ -74,4 +77,4 @@ const MyBookings = () => {
   );
 };
 
-export default MyBookings;
+export default UserBookings;

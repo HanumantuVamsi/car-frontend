@@ -25,9 +25,11 @@ const UpdateCar = () => {
       }
       try {
         const token = localStorage.getItem('token');
-        const response = await axiosInstance.get(`/api/cars/${carId}`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const response = await axiosInstance.get(`/api/cars/${carId}`
+        //   , {
+        //   headers: { Authorization: `Bearer ${token}` },
+        // }
+      );
         setSelectedCar(response.data);
         setLocalSelectedCar(response.data);
         setCarDetails(response.data); // Pre-fill the form with existing car details
@@ -50,9 +52,11 @@ const UpdateCar = () => {
     e.preventDefault();
     try {
       const token = localStorage.getItem('token');
-      const response = await axiosInstance.put(`/api/cars/${selectedCar.id}`, carDetails, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const response = await axiosInstance.put(`/api/cars/${selectedCar.id}`, carDetails
+      //   , {
+      //   headers: { Authorization: `Bearer ${token}` },
+      // }
+    );
       updateCar(response.data); // Update the context with the updated car details
       alert('Car details updated successfully');
       navigate('/cars'); // Redirect to the cars listing page after update

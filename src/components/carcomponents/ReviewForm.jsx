@@ -34,10 +34,11 @@ const ReviewForm = () => {
         {
           rating: formData.rating,
           comment: formData.comment,
-        },
-        {
-          headers: { Authorization: `Bearer ${token}` },
         }
+        // ,
+        // {
+        //   headers: { Authorization: `Bearer ${token}` },
+        // }
       );
 
       navigate(`/cars/${carId}`);

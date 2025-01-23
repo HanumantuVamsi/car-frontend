@@ -13,10 +13,8 @@ const UserDetails = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const token = localStorage.getItem('token');
-        const response = await axiosInstance.get('/api/auth/', {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+      
+        const response = await axiosInstance.get('/api/auth/' );
         setUsers(response.data);
       } catch (error) {
         console.error(error);
@@ -24,7 +22,12 @@ const UserDetails = () => {
     };
 
     fetchUsers();
-  }, [token]);
+  }, []);
+
+  const handleDeleteUser = (userId) => {
+    setUsers(users.filter(user => user.id !== userId));
+  };
+
 
   // Filter users based on search term
   const filteredUsers = users.filter((user) =>
@@ -48,7 +51,7 @@ const UserDetails = () => {
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 p-4">
           {filteredUsers.map((user) => (
-            <UserCard key={user.id} user={user} /> // Ensure each UserCard has a unique key
+            <UserCard key={user.id} user={user} onDelete={handleDeleteUser} /> // Ensure each UserCard has a unique key
           ))}
         </div>
       </div>

@@ -4,11 +4,23 @@ import { Carousel } from 'react-responsive-carousel';
 import 'react-responsive-carousel/lib/styles/carousel.min.css'; // Import CSS for the carousel
 import axiosInstance from '../../config/axiosConfig';
 import { CarContext } from '../../context/CarContext';
-import { AuthContext } from '../../context/authContext';
+import { AuthContext } from '../../context/AuthContext';
 import { createCarImage } from '../../utils/createcar';
 import { fetchCars } from '../../utils/fetchcars';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const CarCard = ({ car }) => {
+
+  const notify = () => toast.success("Car Booked", {
+    position: "top-right",
+    autoClose: 3000, // 5 seconds
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+  });
   const { setSelectedCar } = useContext(CarContext);
   const { authState } = useContext(AuthContext);
   const { role } = authState;
@@ -45,11 +57,13 @@ const CarCard = ({ car }) => {
   const handleDeleteCar = async () => {
     try {
       const token = localStorage.getItem('token');
-      await axiosInstance.delete(`/api/cars/${car.id}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      await axiosInstance.delete(`/api/cars/${car.id}`
+      //   , {
+      //   headers: { Authorization: `Bearer ${token}` },
+      // }
+    );
       alert('Car deleted successfully!');
-      window.location.reload();
+      // window.location.reload();
       navigate('/cars'); // Redirect to the cars listing page after deletion
     } catch (error) {
       console.error(error.response.data);
@@ -93,14 +107,14 @@ const CarCard = ({ car }) => {
         <p className="mt-2 text-gray-300">Price Per Day: ₹{car.pricePerDay}</p>
         <p className="mt-2 text-gray-300">Status: {car.status}</p>
         <div className="mt-4 flex flex-wrap gap-2">
-          {role === 'CUSTOMER' &&
+          
           <button
             className="bg-gray-500 text-white py-2 px-4 rounded"
             onClick={carDetails}
           >
             View Details
-          </button>}
-          {car.status === 'BOOKED' ? (
+          </button>
+          {car.status === 'BOOKED'&&role !== 'ADMIN'  ? (
             <button
               className="bg-gray-500 text-white py-2 px-4 rounded cursor-not-allowed"
               disabled
@@ -108,12 +122,13 @@ const CarCard = ({ car }) => {
               Not Available
             </button>
           ) : (
-            <button
+            role !== 'ADMIN' && <button
               className="bg-indigo-500 text-white py-2 px-4 rounded hover:bg-indigo-700 transition duration-300"
               onClick={handleBookNow}
             >
               Book Now
             </button>
+            
           )}
           {role === 'ADMIN' && (
             <>

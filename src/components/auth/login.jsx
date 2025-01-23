@@ -2,23 +2,36 @@ import React, { useContext, useState } from 'react';
 import axiosInstance from '../../config/axiosConfig';
 import { useNavigate, Link } from 'react-router-dom';
 import { MdEmail, MdLock } from 'react-icons/md';
-import { AuthContext } from '../../context/authContext';
+import { AuthContext } from '../../context/AuthContext';
 import isTokenValid from '../security/isTokenValid';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Login = () => {
+
+  const notify = () => toast.success("Login Successfull", {
+    position: "top-right",
+    autoClose: 3000, // 5 seconds
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+  });
+
   const [formData, setFormData] = useState({
     email: '',
     password: '',
   });
 
-  const {setAuthState} = useContext(AuthContext);
+  const { setAuthState } = useContext(AuthContext);
 
   const [loginError, setLoginError] = useState('');
   const navigate = useNavigate();
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
-    setLoginError(''); // Clear error message when user starts editing
+    setLoginError('');
   };
 
   const handleSubmit = async (e) => {
@@ -39,6 +52,7 @@ const Login = () => {
         isLoggedIn: tokenValid,
         role: userRole
       });
+      notify();
       navigate("/");
       
     } catch (error) {

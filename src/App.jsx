@@ -1,4 +1,4 @@
-import { useState } from 'react'
+
 import './App.css'
 import Register from './components/auth/Register'
 import Login from './components/auth/login'
@@ -20,10 +20,12 @@ import UserDetails from './components/users/UserDetails'
 import NotFound from './components/landing/NotFound'
 import ReviewForm from './components/carcomponents/ReviewForm'
 
-
+import { ToastContainer, toast } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
+import UserBookings from './components/users/UserBookings'
 
 function App() {
-  const [count, setCount] = useState(0)
+
 
   return (
     <>
@@ -44,11 +46,12 @@ function App() {
        <Route path='/allbookings' element={<ProtectedRoute element={<AllBookings/>}/>} />
        <Route path='/cars/:carId' element={<ProtectedRoute element={<CarDetails/>}/>} />
        <Route path='/allusers' element={<ProtectedRoute element={<UserDetails/>}/>} />
+       <Route path='/userbookings/:userId' element={<ProtectedRoute element={<UserBookings/>}/>} />
        <Route path='/review/:carId' element={<ProtectedRoute element={<ReviewForm/>}/>} />
        <Route path='/*' element={<NotFound/>} />
      </Routes>
      </BrowserRouter>
-    
+     <ToastContainer />
     </>
   )
 }

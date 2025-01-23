@@ -1,7 +1,7 @@
 import React, { useState, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { FaBars, FaTimes, FaCar } from 'react-icons/fa';
-import { AuthContext } from '../../context/authContext';
+import { AuthContext } from '../../context/AuthContext';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -33,7 +33,7 @@ const Navbar = () => {
             <li>{
               authState.isLoggedIn ? <Link to="/">
               <button className='p-2 bg-gray-100 text-black rounded-md duration-300 hover:scale-90' onClick={logout}>Logout</button></Link>
-              : <Link to="/register">
+              : <Link to="/login">
               <button className='p-2 bg-gray-100 text-black rounded-md duration-300 hover:scale-90'>Login/Register</button></Link>
             }</li>
           </ul>

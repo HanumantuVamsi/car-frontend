@@ -7,7 +7,7 @@ export const createCarImage = (car, angle,i) => {
   
     url.searchParams.append("customer", "hrjavascript-mastery");
     url.searchParams.append("zoomType", "fullscreen");
-    url.searchParams.append("paintdescription",color[i]);
+    url.searchParams.append("paintdescription","blue");
     url.searchParams.append("modelFamily", model.split(" ")[0]);
     url.searchParams.append("make", make);
     url.searchParams.append("modelYear", `${year}`);

@@ -2,8 +2,22 @@ import React, { useState } from 'react';
 import axiosInstance from '../../config/axiosConfig';
 import { Link, useNavigate } from 'react-router-dom';
 import { MdPerson, MdEmail, MdLock } from 'react-icons/md';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
+//register the user
 const Register = () => {
+
+  const notify = () => toast.success("Rigistered Successfully", {
+    position: "top-right",
+    autoClose: 3000, // 5 seconds
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+  });
+
   const [formData, setFormData] = useState({
     username: '',
     email: '',
@@ -15,13 +29,16 @@ const Register = () => {
   const [passwordError, setPasswordError] = useState('');
   const [registerSuccess, setRegisterSuccess] = useState(''); 
   const [registerError, setRegisterError] = useState('');
+  const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
     setRegisterSuccess(''); 
     setRegisterError('');
+    setPasswordError('');
   };
 
+  //on clicking the submit buttion this method is responsible for send the data to backend
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (formData.password !== formData.confirmPassword) {
@@ -29,17 +46,21 @@ const Register = () => {
       return;
     }
 
+       // checking the password is in the required format
+       if (!passwordRegex.test(formData.password)) {
+        setPasswordError("Password must be 8+ characters with uppercase, lowercase, number, and symbol.");
+        return;
+      }
+
     try { 
       const response = await axiosInstance.post('/api/auth/register', {
         username: formData.username,
         email: formData.email,
         password: formData.password,
       });
-
       setRegisterSuccess('User registered successfully!'); 
       console.log(response);
-
-      alert('User registered successfully!');
+      notify()
       navigate('/login');
       
 

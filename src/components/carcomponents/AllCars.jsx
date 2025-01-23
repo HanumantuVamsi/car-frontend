@@ -3,7 +3,7 @@ import CarCard from './Car'; // Assuming the CarCard component is imported corre
 import Navbar from '../landing/Navbar';
 import { CarContext } from '../../context/CarContext';
 import { useNavigate } from 'react-router-dom';
-import { AuthContext } from '../../context/authContext';
+import { AuthContext } from '../../context/AuthContext';
 
 const AllCars = () => {
   const { cars } = useContext(CarContext);

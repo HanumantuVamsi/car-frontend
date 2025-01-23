@@ -26,9 +26,11 @@ const AddCar = () => {
     e.preventDefault();
     try {
       const token = localStorage.getItem('token');
-      const response = await axiosInstance.post('/api/cars/', carDetails, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const response = await axiosInstance.post('/api/cars/', carDetails
+      //   , {
+      //   headers: { Authorization: `Bearer ${token}` },
+      // }
+    );
       addCar(response.data); // Update the context with the new car
       alert('Car added successfully!');
       navigate('/cars'); // Redirect to the cars listing page after adding a car

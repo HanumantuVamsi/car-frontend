@@ -3,8 +3,22 @@ import axiosInstance from '../../config/axiosConfig';
 import { AuthContext } from '../../context/AuthContext';
 import BookingPopUp from './BookingPopUp';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const BookingCard = ({ booking, onCancel }) => {
+
+  const bookingCancelledToast = () => toast.error("Booking Cancelled", {
+    position: "top-right",
+    autoClose: 3000, // 5 seconds
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+  });
+
+
   const { authState } = useContext(AuthContext);
   const { role } = authState;
   const [modalIsOpen, setModalIsOpen] = useState(false);
@@ -15,12 +29,14 @@ const BookingCard = ({ booking, onCancel }) => {
   const handleCancelBooking = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await axiosInstance.put(`/api/bookings/booking/${booking.bookId}/cancel`, {}, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const response = await axiosInstance.put(`/api/bookings/booking/${booking.bookId}/cancel`, {}
+      //   , {
+      //   headers: { Authorization: `Bearer ${token}` },
+      // }
+    );
       if (response.status === 200) {
-        alert('Booking is Cancelled Successfully');
-        onCancel(booking.bookId);
+        bookingCancelledToast()
+        navigate('/cars')
       } else {
         alert('Failed to Cancel Booking');
       }
@@ -32,12 +48,15 @@ const BookingCard = ({ booking, onCancel }) => {
   const handleCompleteBooking = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await axiosInstance.put(`/api/bookings/booking/${booking.bookId}/complete`, {}, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const response = await axiosInstance.put(`/api/bookings/booking/${booking.bookId}/complete`, {}
+      //   , {
+      //   headers: { Authorization: `Bearer ${token}` },
+      // }
+    );
       if (response.status === 200) {
         setCompletedBooking(response.data);
         setModalIsOpen(true);
+        navigate('/booking')
       } else {
         alert('Failed to mark booking as Completed');
       }
@@ -121,16 +140,19 @@ const BookingCard = ({ booking, onCancel }) => {
             >
               Completed
             </button>
-
+            </div>
+          )}
+          
+           { role !== 'ADMIN' && booking.status === 'COMPLETED'&&
             <button
-              className="w-full md:w-auto mt-4 bg-green-600 text-white py-2 px-4 rounded"
+              className="w-full md:w-auto mt-4 bg-blue-600 text-white py-2 px-4 rounded"
               onClick={handleReview}
               
             >
               Add Review
             </button>
-            </div>
-          )}
+           }
+         
         </div>
       </div>
 
