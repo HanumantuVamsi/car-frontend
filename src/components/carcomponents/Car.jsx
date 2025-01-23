@@ -1,14 +1,28 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Carousel } from 'react-responsive-carousel';
+import 'react-responsive-carousel/lib/styles/carousel.min.css'; // Import CSS for the carousel
 import axiosInstance from '../../config/axiosConfig';
 import { CarContext } from '../../context/CarContext';
-import { AuthContext } from '../../context/AuthContext';
+import { AuthContext } from '../../context/authContext';
+import { createCarImage } from '../../utils/createcar';
+import { fetchCars } from '../../utils/fetchcars';
 
 const CarCard = ({ car }) => {
   const { setSelectedCar } = useContext(CarContext);
   const { authState } = useContext(AuthContext);
   const { role } = authState;
   const navigate = useNavigate();
+
+  const i = 0;
+
+ 
+
+  const carImg = {
+    make: car.brand,
+    model: car.model,
+    year: "2022"
+  };
 
   const handleBookNow = () => {
     setSelectedCar(car);
@@ -22,6 +36,12 @@ const CarCard = ({ car }) => {
     navigate('/update');
   };
 
+  const carDetails = () => {
+    setSelectedCar(car);
+    const carId = localStorage.setItem('selectedCarId', car.id);
+    navigate(`/cars/${car.id}`);
+  };
+
   const handleDeleteCar = async () => {
     try {
       const token = localStorage.getItem('token');
@@ -32,14 +52,37 @@ const CarCard = ({ car }) => {
       window.location.reload();
       navigate('/cars'); // Redirect to the cars listing page after deletion
     } catch (error) {
-      console.error(error);
-      alert('Failed to delete the car');
+      console.error(error.response.data);
+      alert(error.response.data);
     }
   };
 
+  useEffect(() => {
+    const fetchData = async () => {
+      const result = await fetchCars(car.model);
+      console.log(car.model);
+      console.log(result);
+    };
+    fetchData();
+  }, []);
+
   return (
-    <div className="bg-gray-800 shadow-md rounded-lg overflow-hidden flex flex-col md:flex-row">
-      <div className="p-6 flex-1">
+    <div className="bg-gray-800 shadow-md rounded-lg overflow-hidden flex flex-col" style={{ maxWidth: '350px', margin: '10px' }}>
+      <div className="flex-1">
+        <Carousel showThumbs={false} autoPlay infiniteLoop className="rounded-t-lg" style={{ height: '150px' }}>
+          <div>
+            <img src={createCarImage(carImg, "", i)} alt="Car Image Angle 0" style={{ maxWidth: '100%', height: 'auto' }} />
+          </div>
+          <div>
+            <img src={createCarImage(carImg, "13", i)} alt="Car Image Angle 13" style={{ maxWidth: '100%', height: 'auto' }} />
+          </div>
+          <div>
+            <img src={createCarImage(carImg, "29", i)} alt="Car Image Angle 29" style={{ maxWidth: '100%', height: 'auto' }} />
+          </div>
+        </Carousel>
+       
+      </div>
+      <div className="p-4 flex-1">
         <div className="uppercase tracking-wide text-sm text-red-400 font-semibold">
           {car.brand}
         </div>
@@ -50,6 +93,13 @@ const CarCard = ({ car }) => {
         <p className="mt-2 text-gray-300">Price Per Day: ₹{car.pricePerDay}</p>
         <p className="mt-2 text-gray-300">Status: {car.status}</p>
         <div className="mt-4 flex flex-wrap gap-2">
+          {role === 'CUSTOMER' &&
+          <button
+            className="bg-gray-500 text-white py-2 px-4 rounded"
+            onClick={carDetails}
+          >
+            View Details
+          </button>}
           {car.status === 'BOOKED' ? (
             <button
               className="bg-gray-500 text-white py-2 px-4 rounded cursor-not-allowed"

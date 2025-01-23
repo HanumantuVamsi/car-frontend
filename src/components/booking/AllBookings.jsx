@@ -24,6 +24,7 @@ const AllBookings = () => {
           headers: { Authorization: `Bearer ${token}` },
         });
         setBookings(response.data);
+        console.log(response.data)
       } catch (err) {
         console.log(err);
       }

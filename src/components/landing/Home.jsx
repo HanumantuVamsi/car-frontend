@@ -9,7 +9,7 @@ import Copyright from './Copyright'
 const Home = () => {
    
   return (
-    <div className='h-screen overflow-hidden'>
+    <div className=' h-screen overflow-hidden'>
       {/* <h1 className=' text-4xl'>Home Page</h1>
       <Link to="/register">Register</Link>{ "  "}
       <Link to="/login">Login</Link> */}

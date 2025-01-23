@@ -1,13 +1,17 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import axiosInstance from '../../config/axiosConfig';
 import { useNavigate, Link } from 'react-router-dom';
 import { MdEmail, MdLock } from 'react-icons/md';
+import { AuthContext } from '../../context/authContext';
+import isTokenValid from '../security/isTokenValid';
 
 const Login = () => {
   const [formData, setFormData] = useState({
     email: '',
     password: '',
   });
+
+  const {setAuthState} = useContext(AuthContext);
 
   const [loginError, setLoginError] = useState('');
   const navigate = useNavigate();
@@ -28,8 +32,15 @@ const Login = () => {
       const { token, role } = response.data;
       localStorage.setItem('token', token); // Store the JWT in localStorage
       localStorage.setItem('role', role);
+      
+      const tokenValid = isTokenValid();
+      const userRole = localStorage.getItem('role');
+      setAuthState({
+        isLoggedIn: tokenValid,
+        role: userRole
+      });
       navigate("/");
-      window.location.reload(); // Force reload to update Navbar
+      
     } catch (error) {
       if (error.response && error.response.status === 401) {
         setLoginError('Invalid credentials. Please check your email and password.');

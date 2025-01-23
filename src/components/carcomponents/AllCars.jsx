@@ -1,9 +1,9 @@
 import React, { useContext, useState } from 'react';
-import CarCard from './Car';
+import CarCard from './Car'; // Assuming the CarCard component is imported correctly
 import Navbar from '../landing/Navbar';
 import { CarContext } from '../../context/CarContext';
 import { useNavigate } from 'react-router-dom';
-import { AuthContext } from '../../context/AuthContext';
+import { AuthContext } from '../../context/authContext';
 
 const AllCars = () => {
   const { cars } = useContext(CarContext);
@@ -26,13 +26,14 @@ const AllCars = () => {
     <>
       <Navbar />
       <div className="p-6">
-        <div className="flex justify-between items-center mb-4">
+        <div className='flex items-center justify-between flex-wrap'>
+          <h1 className='text-white md:text-2xl font-bold'>All Cars</h1>
           <input
             type="text"
             placeholder="Search cars..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="p-2 border rounded w-full md:w-1/2 bg-gray-800 text-white"
+            className="p-2 border rounded w-full md:my-0 my-3 md:w-1/2 bg-gray-800 text-white"
           />
           {role === 'ADMIN' && (
             <button
@@ -43,7 +44,7 @@ const AllCars = () => {
             </button>
           )}
         </div>
-        <div className="flex items-center justify-start gap-4 p-4 flex-wrap">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 p-4">
           {filteredCars.map((data) => (
             <CarCard key={data.id} car={data} /> // Ensure each CarCard has a unique key
           ))}

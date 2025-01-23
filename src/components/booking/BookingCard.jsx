@@ -2,12 +2,15 @@ import React, { useContext, useState } from 'react';
 import axiosInstance from '../../config/axiosConfig';
 import { AuthContext } from '../../context/AuthContext';
 import BookingPopUp from './BookingPopUp';
+import { useNavigate } from 'react-router-dom';
 
 const BookingCard = ({ booking, onCancel }) => {
   const { authState } = useContext(AuthContext);
   const { role } = authState;
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [completedBooking, setCompletedBooking] = useState(null);
+
+  const navigate = useNavigate();
 
   const handleCancelBooking = async () => {
     try {
@@ -42,6 +45,11 @@ const BookingCard = ({ booking, onCancel }) => {
       alert('Failed to mark booking as Completed');
     }
   };
+
+  const handleReview = ()=>{
+    console.log(booking)
+    navigate(`/review/${booking.carId}`);
+  }
 
   const closeModal = () => {
     setModalIsOpen(false);
@@ -106,12 +114,22 @@ const BookingCard = ({ booking, onCancel }) => {
             </button>
           )}
           {booking.status === 'COMPLETED' && (
+            <div>
             <button
-              className="w-full md:w-auto mt-4 bg-green-600 text-white py-2 px-4 rounded cursor-not-allowed"
+              className="w-full md:w-auto mt-4 mr-2 bg-green-600 text-white py-2 px-4 rounded cursor-not-allowed"
               disabled
             >
               Completed
             </button>
+
+            <button
+              className="w-full md:w-auto mt-4 bg-green-600 text-white py-2 px-4 rounded"
+              onClick={handleReview}
+              
+            >
+              Add Review
+            </button>
+            </div>
           )}
         </div>
       </div>

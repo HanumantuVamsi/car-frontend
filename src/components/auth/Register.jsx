@@ -28,21 +28,30 @@ const Register = () => {
       setPasswordError("Passwords do not match");
       return;
     }
-    // handle form submission
-    console.log(formData);
-    try { 
-        const response = await axiosInstance.post('/api/auth/register', { username: formData.username, email: formData.email, password: formData.password, });
-        setRegisterSuccess('User registered successfully!'); 
-        console.log(response.data);
 
-     } 
-      catch (error) 
-        { setRegisterError('Registration failed. Please try again.'); 
-            console.error(error); 
-        } 
-        setPasswordError('');
-        setRegisterError('');
-        navigate('/login')
+    try { 
+      const response = await axiosInstance.post('/api/auth/register', {
+        username: formData.username,
+        email: formData.email,
+        password: formData.password,
+      });
+
+      setRegisterSuccess('User registered successfully!'); 
+      console.log(response);
+
+      alert('User registered successfully!');
+      navigate('/login');
+      
+
+    } catch (error) {
+      if (error.response && error.response.data) {
+        setRegisterError(error.response.data);
+      } else {
+        setRegisterError('User registration failed');
+      }
+      console.error(error);
+    }
+    setPasswordError('');
   };
 
   return (
@@ -51,10 +60,12 @@ const Register = () => {
         <h2 className="text-2xl font-bold text-center text-red-400">Register</h2>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label htmlFor="username" className="block text-sm font-medium text-white"><div className='flex items-center text-[1rem] gap-2'>
-               <div><MdPerson/></div>
-               <div>Username</div>
-              </div></label>
+            <label htmlFor="username" className="block text-sm font-medium text-white">
+              <div className='flex items-center text-[1rem] gap-2'>
+                <div><MdPerson/></div>
+                <div>Username</div>
+              </div>
+            </label>
             <input
               type="text"
               name="username"
@@ -66,10 +77,12 @@ const Register = () => {
             />
           </div>
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-white"><div className='flex items-center text-[1rem] gap-2'>
-               <div><MdEmail/></div>
-               <div>Email</div>
-              </div></label>
+            <label htmlFor="email" className="block text-sm font-medium text-white">
+              <div className='flex items-center text-[1rem] gap-2'>
+                <div><MdEmail/></div>
+                <div>Email</div>
+              </div>
+            </label>
             <input
               type="email"
               name="email"
@@ -81,10 +94,12 @@ const Register = () => {
             />
           </div>
           <div>
-            <label htmlFor="password" className="block text-sm font-medium text-white"><div className='flex items-center text-[1rem] gap-2'>
-               <div><MdLock/></div>
-               <div>Password</div>
-              </div></label>
+            <label htmlFor="password" className="block text-sm font-medium text-white">
+              <div className='flex items-center text-[1rem] gap-2'>
+                <div><MdLock/></div>
+                <div>Password</div>
+              </div>
+            </label>
             <input
               type="password"
               name="password"
@@ -96,10 +111,12 @@ const Register = () => {
             />
           </div>
           <div>
-            <label htmlFor="confirmPassword" className="block text-sm font-medium text-white"><div className='flex items-center text-[1rem] gap-2'>
-               <div><MdLock/></div>
-               <div>Conform Password</div>
-              </div></label>
+            <label htmlFor="confirmPassword" className="block text-sm font-medium text-white">
+              <div className='flex items-center text-[1rem] gap-2'>
+                <div><MdLock/></div>
+                <div>Confirm Password</div>
+              </div>
+            </label>
             <input
               type="password"
               name="confirmPassword"
@@ -109,17 +126,17 @@ const Register = () => {
               className="w-full p-2 mt-1 border rounded-md"
               required
             />
+            {passwordError && <p className="text-red-500">{passwordError}</p>}
           </div>
-          {passwordError && <p className="text-red-500">{passwordError}</p>} 
           {registerSuccess && <p className="text-green-500">{registerSuccess}</p>}
-           {registerError && <p className="text-red-500">{registerError}</p>} 
+          {registerError && <p className="text-red-500">{registerError}</p>}
           <button
             type="submit"
             className="w-full py-2 mt-4 text-white bg-blue-600 rounded-md hover:bg-blue-700 duration-300 hover:scale-90"
           >
             Register
           </button>
-          <p className='text-white'>already registered ? <Link to="/login"><span className='text-blue-700'>login</span></Link></p>
+          <p className='text-white'>Already registered? <Link to="/login"><span className='text-blue-700'>Login</span></Link></p>
         </form>
       </div>
     </div>
