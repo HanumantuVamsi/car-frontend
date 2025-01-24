@@ -7,6 +7,7 @@ import isTokenValid from '../security/isTokenValid';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
+//This component provide login form
 const Login = () => {
 
   const notify = () => toast.success("Login Successfull", {
@@ -41,8 +42,9 @@ const Login = () => {
         email: formData.email,
         password: formData.password,
       });
-
+      
       const { token, role } = response.data;
+      if(response.status===200){
       localStorage.setItem('token', token); // Store the JWT in localStorage
       localStorage.setItem('role', role);
       
@@ -54,6 +56,7 @@ const Login = () => {
       });
       notify();
       navigate("/");
+    }
       
     } catch (error) {
       if (error.response && error.response.status === 401) {
