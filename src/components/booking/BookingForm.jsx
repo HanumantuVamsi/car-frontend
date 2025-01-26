@@ -1,51 +1,42 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { CarContext } from '../../context/CarContext';
 import axiosInstance from '../../config/axiosConfig';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-const BookingForm = () => {
-  
-  const notify = () => toast.success("Booked Successfully", {
-    position: "top-right",
-    autoClose: 3000, // 5 seconds
-    hideProgressBar: false,
-    closeOnClick: true,
-    pauseOnHover: true,
-    draggable: true,
-    progress: undefined,
-  });
+//this needs to check again
 
-  const { setSelectedCar } = useContext(CarContext);
-  const [selectedCar, setLocalSelectedCar] = useState(null);
+//this component provides booking form
+const BookingForm = () => {
+
+  // const {selectedCar, setSelectedCar } = useContext(CarContext);
+  const [selectedCar, setSelectedCar] = useState(null);
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
   const navigate = useNavigate();
+  const { carId } = useParams();
 
   useEffect(() => {
-    const fetchCarDetails = async () => {
-      const carId = localStorage.getItem('selectedCarId');
+      const fetchCarDetails = async () => {
+      // const carId = localStorage.getItem('selectedCarId');
       if (!carId) {
         alert('No car selected');
         navigate('/cars'); // Redirect to cars page if no car is selected
         return;
       }
       try {
-     
-        const response = await axiosInstance.get(`/api/cars/${carId}`
-        //   , {
-        //   headers: { Authorization: `Bearer ${token}` },
-        // }
-      );
+        const response = await axiosInstance.get(`/api/cars/${carId}`);
         setSelectedCar(response.data);
-        setLocalSelectedCar(response.data);
+        // setLocalSelectedCar(response.data);
       } catch (err) {
         console.log(err);
       }
     };
     fetchCarDetails();
-  }, [navigate, setSelectedCar]);
+  }, []);
+
+  // [navigate, setSelectedCar]
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -56,26 +47,21 @@ const BookingForm = () => {
     };
 
     try {
-      const token = localStorage.getItem('token');
-      const response = await axiosInstance.post(`/api/bookings/booking/${selectedCar.id}`, bookingData
-      //   , {
-      //   headers: { Authorization: `Bearer ${token}` },
-      // }
-    );
+      const response = await axiosInstance.post(`/api/bookings/booking/${selectedCar.id}`, bookingData);
       if (response.status === 200) {
-        notify()
+        //toaster to show success message
+        toast.success("Booked Successfully");
         navigate("/mybookings");
-         // Redirect to home or another page after successful booking
       } else {
-        alert('Booking Failed');
+        toast.error('Booking Failed');
       }
     } catch (error) {
-      alert('Booking Failed');
+      toast.error('Booking Failed');
     }
   };
 
   const validateDates = () => {
-    const today = new Date().toISOString().split('T')[0]; // Get today's date in YYYY-MM-DD format
+    const today = new Date().toISOString().split('T')[0]; 
     if (startDate <today) {
       alert('Start date should be greater than or equal to today');
       return false;
@@ -102,6 +88,8 @@ const BookingForm = () => {
             className="space-y-4"
           >
             <div>
+
+              {/* car name */}
               <label htmlFor="carName" className="block text-sm font-medium text-white">
                 Car Name
               </label>
@@ -113,6 +101,7 @@ const BookingForm = () => {
                 disabled
               />
             </div>
+            {/* car model */}
             <div>
               <label htmlFor="model" className="block text-sm font-medium text-white">
                 Model
@@ -125,6 +114,7 @@ const BookingForm = () => {
                 disabled
               />
             </div>
+            {/* start date */}
             <div>
               <label htmlFor="startDate" className="block text-sm font-medium text-white">
                 Start Date
@@ -138,6 +128,7 @@ const BookingForm = () => {
                 required
               />
             </div>
+            {/* end date */}
             <div>
               <label htmlFor="endDate" className="block text-sm font-medium text-white">
                 End Date
@@ -151,6 +142,7 @@ const BookingForm = () => {
                 required
               />
             </div>
+            {/* submit button */}
             <button
               type="submit"
               className="w-full py-2 mt-4 text-white bg-blue-600 rounded-md duration-300 hover:scale-90"

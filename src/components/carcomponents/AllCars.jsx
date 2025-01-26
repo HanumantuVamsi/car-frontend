@@ -1,9 +1,11 @@
 import React, { useContext, useState } from 'react';
-import CarCard from './Car'; // Assuming the CarCard component is imported correctly
+import CarCard from './CarCard'; 
 import Navbar from '../landing/Navbar';
 import { CarContext } from '../../context/CarContext';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
+
+//completed
 
 const AllCars = () => {
   const { cars } = useContext(CarContext);
@@ -44,9 +46,10 @@ const AllCars = () => {
             </button>
           )}
         </div>
+        {/* each div is a car */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 p-4">
-          {filteredCars.map((data) => (
-            <CarCard key={data.id} car={data} /> // Ensure each CarCard has a unique key
+          {filteredCars.map((car) => (
+            <CarCard key={car.id} car={car} /> // each CarCard has a unique key
           ))}
         </div>
       </div>

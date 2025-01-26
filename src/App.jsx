@@ -1,21 +1,18 @@
-
 import './App.css'
 import Register from './components/auth/Register'
 import Login from './components/auth/login'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import Home from './components/landing/Home'
 import AllCars from './components/carcomponents/AllCars'
-import Navbar from './components/landing/Navbar'
-
 import ProtectedRoute from './components/security/ProtectedRoute'
-import BookingForm from './components/booking/Booking'
+import BookingForm from './components/booking/BookingForm'
 import MyBookings from './components/booking/Mybookings'
 import UpdateCar from './components/carcomponents/UpdateCar'
 import AddCar from './components/carcomponents/AddCar'
 import AllBookings from './components/booking/AllBookings'
 import About from './components/landing/About'
 import ContactUs from './components/landing/Contact'
-import CarDetails from './components/carcomponents/CardDetails'
+import CarDetails from './components/carcomponents/CarDetails'
 import UserDetails from './components/users/UserDetails'
 import NotFound from './components/landing/NotFound'
 import ReviewForm from './components/carcomponents/ReviewForm'
@@ -39,9 +36,9 @@ function App() {
        <Route path='/about' element={<About/>}/>
        <Route path='/contact' element={<ContactUs/>}/>
        <Route path="/cars" element={<ProtectedRoute element={<AllCars />} />} />
-       <Route path='/booking' element={<ProtectedRoute element={<BookingForm/>}/>} />
+       <Route path='/booking/:carId' element={<ProtectedRoute element={<BookingForm/>}/>} />
        <Route path='/mybookings' element={<ProtectedRoute element={<MyBookings/>}/>} />
-       <Route path='/update' element={<ProtectedRoute element={<UpdateCar/>}/>} />
+       <Route path='/update/:carId' element={<ProtectedRoute element={<UpdateCar/>}/>} />
        <Route path='/addcar' element={<ProtectedRoute element={<AddCar/>}/>} />
        <Route path='/allbookings' element={<ProtectedRoute element={<AllBookings/>}/>} />
        <Route path='/cars/:carId' element={<ProtectedRoute element={<CarDetails/>}/>} />

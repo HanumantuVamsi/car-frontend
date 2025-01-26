@@ -12,13 +12,7 @@ export const CarProvider = ({ children }) => {
   useEffect(() => {
     const getCars = async () => {
       try {
-        const token = localStorage.getItem('token');
-        const response = await axiosInstance.get('/api/cars/'
-        //   , {
-        //   headers: { Authorization: `Bearer ${token}` },
-        // }
-      );
-
+        const response = await axiosInstance.get('/api/cars/');
         setCars(response.data);
       } catch (err) {
         console.log(err);
@@ -50,8 +44,10 @@ export const CarProvider = ({ children }) => {
     );
   };
 
+  
+
   return (
-    <CarContext.Provider value={{ cars, setCars, selectedCar, setSelectedCar, fetchSelectedCar, addCar, updateCar }}>
+    <CarContext.Provider value={{ cars, setCars, selectedCar, setSelectedCar, fetchSelectedCar, addCar, updateCar}}>
       {children}
     </CarContext.Provider>
   );

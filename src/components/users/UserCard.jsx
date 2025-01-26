@@ -6,8 +6,6 @@ import axiosInstance from '../../config/axiosConfig';
 const UserCard = ({ user,onDelete }) => {
   const navigate  = useNavigate();
 
-  
-
   const handleDelete = async()=>{
     try {
       const response = await axiosInstance.delete(`/api/auth/${user.id}` );

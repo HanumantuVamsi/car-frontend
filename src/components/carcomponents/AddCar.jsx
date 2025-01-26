@@ -2,8 +2,16 @@ import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axiosInstance from '../../config/axiosConfig';
 import { CarContext } from '../../context/CarContext';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { AuthContext } from '../../context/AuthContext';
+import NotAuthorized from '../landing/NotAuthorized';
 
+// Completed
+
+//this component provide form to add car (Admin Only)
 const AddCar = () => {
+
   const [carDetails, setCarDetails] = useState({
     brand: '',
     model: '',
@@ -11,11 +19,22 @@ const AddCar = () => {
     pricePerDay: '',
     status: 'AVAILABLE', // Default status
   });
+  const { authState } = useContext(AuthContext);
+  const {role} = authState;
   const { addCar } = useContext(CarContext);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
+    // Validate input for year and pricePerDay
+    if (name === 'year' && isNaN(value)) {
+      alert('Please enter a valid year');
+      return;
+    }
+    if (name === 'pricePerDay' && isNaN(value)) {
+      alert('Please enter a valid price');
+      return;
+    }
     setCarDetails((prevDetails) => ({
       ...prevDetails,
       [name]: value,
@@ -25,26 +44,26 @@ const AddCar = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const token = localStorage.getItem('token');
-      const response = await axiosInstance.post('/api/cars/', carDetails
-      //   , {
-      //   headers: { Authorization: `Bearer ${token}` },
-      // }
-    );
+      const response = await axiosInstance.post('/api/cars/', carDetails);
       addCar(response.data); // Update the context with the new car
-      alert('Car added successfully!');
+      toast.success("car added successfully")
       navigate('/cars'); // Redirect to the cars listing page after adding a car
     } catch (err) {
       console.error(err);
-      alert('Failed to add car');
+      toast.error("Failed to add car")
     }
   };
-
+  //checking weather the user is authorised for this page
+  if(role!=='ADMIN'){
+    return <NotAuthorized/>
+  }
+  else {
   return (
-    <div className="flex items-center justify-center min-h-screen">
+       <div className="flex items-center justify-center min-h-screen">
       <div className="w-full max-w-md p-8 space-y-6 bg-gray-800 rounded-lg shadow-md">
         <h2 className="text-2xl font-bold text-center text-red-400">Add a New Car</h2>
         <form onSubmit={handleSubmit} className="space-y-4">
+           {/* input for brand */}
           <div>
             <label htmlFor="brand" className="block text-sm font-medium text-white">
               Brand
@@ -59,6 +78,7 @@ const AddCar = () => {
               required
             />
           </div>
+          {/* input for brand */}
           <div>
             <label htmlFor="model" className="block text-sm font-medium text-white">
               Model
@@ -73,6 +93,7 @@ const AddCar = () => {
               required
             />
           </div>
+          {/* input for year */}
           <div>
             <label htmlFor="year" className="block text-sm font-medium text-white">
               Year
@@ -87,6 +108,7 @@ const AddCar = () => {
               required
             />
           </div>
+          {/* input for price */}
           <div>
             <label htmlFor="pricePerDay" className="block text-sm font-medium text-white">
               Price Per Day
@@ -101,6 +123,7 @@ const AddCar = () => {
               required
             />
           </div>
+          {/* input for status */}
           <div>
             <label htmlFor="status" className="block text-sm font-medium text-white">
               Status
@@ -117,6 +140,7 @@ const AddCar = () => {
               <option value="BOOKED">Booked</option>
             </select>
           </div>
+          {/* submit button */}
           <button
             type="submit"
             className="w-full py-2 mt-4 text-white bg-blue-600 rounded-md duration-300 hover:scale-90"
@@ -126,7 +150,8 @@ const AddCar = () => {
         </form>
       </div>
     </div>
-  );
+   
+  );}
 };
 
 export default AddCar;

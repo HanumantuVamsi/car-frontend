@@ -1,7 +1,7 @@
-export const createCarImage = (car, angle,i) => {
+export const createCarImage = (car, angle) => {
     const url = new URL("https://cdn.imagin.studio/getimage");
 
-    const color = ["red","white","black","green","grey","blue"]
+
 
     const { make, year, model } = car;
   

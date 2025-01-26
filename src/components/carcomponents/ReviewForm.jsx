@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { MdStar } from 'react-icons/md';
 import { useParams } from 'react-router-dom';
 
+//this is review form for cars
 const ReviewForm = () => {
   const [formData, setFormData] = useState({
     rating: 0,
@@ -28,21 +29,15 @@ const ReviewForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const token = localStorage.getItem('token');
       const response = await axiosInstance.post(
         `/api/review/${carId}`,
         {
           rating: formData.rating,
           comment: formData.comment,
-        }
-        // ,
-        // {
-        //   headers: { Authorization: `Bearer ${token}` },
-        // }
-      );
+        });
 
-      navigate(`/cars/${carId}`);
-      window.location.reload(); // Force reload to update reviews
+      navigate(`/booking`);
+
     } catch (error) {
       setSubmitError('Failed to submit review. Please try again later.');
       console.error(error);

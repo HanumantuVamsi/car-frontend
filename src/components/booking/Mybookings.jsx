@@ -14,12 +14,7 @@ const MyBookings = () => {
   useEffect(() => {
     const fetchBookings = async () => {
       try {
-        const token = localStorage.getItem('token');
-        const response = await axiosInstance.get('/api/bookings/id'
-        //   , {
-        //   headers: { Authorization: `Bearer ${token}` },
-        // }
-      );
+        const response = await axiosInstance.get('/api/bookings/id');
         setBookings(response.data);
       } catch (err) {
         console.log(err);

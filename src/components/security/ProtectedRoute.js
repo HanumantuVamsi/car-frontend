@@ -16,6 +16,8 @@ const ProtectedRoute = ({ element: Component }) => {
       });
       localStorage.removeItem('token');
       localStorage.removeItem('role');
+      localStorage.removeItem('selectedCar')
+      localStorage.removeItem('selectedCarId')
       navigate('/login', { state: { from: location }, replace: true });
     } else {
       const role = localStorage.getItem('role');

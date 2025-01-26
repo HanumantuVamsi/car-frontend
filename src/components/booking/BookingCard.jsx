@@ -28,12 +28,7 @@ const BookingCard = ({ booking, onCancel }) => {
 
   const handleCancelBooking = async () => {
     try {
-      const token = localStorage.getItem('token');
-      const response = await axiosInstance.put(`/api/bookings/booking/${booking.bookId}/cancel`, {}
-      //   , {
-      //   headers: { Authorization: `Bearer ${token}` },
-      // }
-    );
+      const response = await axiosInstance.put(`/api/bookings/booking/${booking.bookId}/cancel`, {}  );
       if (response.status === 200) {
         bookingCancelledToast()
         navigate('/cars')
@@ -48,15 +43,10 @@ const BookingCard = ({ booking, onCancel }) => {
   const handleCompleteBooking = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await axiosInstance.put(`/api/bookings/booking/${booking.bookId}/complete`, {}
-      //   , {
-      //   headers: { Authorization: `Bearer ${token}` },
-      // }
-    );
+      const response = await axiosInstance.put(`/api/bookings/booking/${booking.bookId}/complete`, {} );
       if (response.status === 200) {
         setCompletedBooking(response.data);
         setModalIsOpen(true);
-        navigate('/booking')
       } else {
         alert('Failed to mark booking as Completed');
       }
@@ -147,12 +137,10 @@ const BookingCard = ({ booking, onCancel }) => {
             <button
               className="w-full md:w-auto mt-4 bg-blue-600 text-white py-2 px-4 rounded"
               onClick={handleReview}
-              
             >
               Add Review
             </button>
            }
-         
         </div>
       </div>
 

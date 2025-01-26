@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axiosInstance from '../../config/axiosConfig';
 import BookingCard from '../booking/BookingCard';
 import Navbar from '../landing/Navbar';
-import { useNavigate,useParams } from 'react-router-dom';
+import {useParams } from 'react-router-dom';
 
 const UserBookings = () => {
   const [bookings, setBookings] = useState([]);
@@ -26,9 +26,6 @@ const UserBookings = () => {
     fetchBookings();
   }, []);
 
-  const handleDeleteUser = (userId) => {
-    setUsers(users.filter(user => user.id !== userId));
-  };
 
   const handleCancelBooking = (bookId) => {
     setBookings(bookings.filter((booking) => booking.bookId !== bookId));

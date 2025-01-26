@@ -6,92 +6,65 @@ import axiosInstance from '../../config/axiosConfig';
 import { CarContext } from '../../context/CarContext';
 import { AuthContext } from '../../context/AuthContext';
 import { createCarImage } from '../../utils/createcar';
-import { fetchCars } from '../../utils/fetchcars';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
+//this represents the individiual car item
 const CarCard = ({ car }) => {
 
-  const notify = () => toast.success("Car Booked", {
-    position: "top-right",
-    autoClose: 3000, // 5 seconds
-    hideProgressBar: false,
-    closeOnClick: true,
-    pauseOnHover: true,
-    draggable: true,
-    progress: undefined,
-  });
   const { setSelectedCar } = useContext(CarContext);
   const { authState } = useContext(AuthContext);
   const { role } = authState;
   const navigate = useNavigate();
 
-  const i = 0;
-
- 
-
+  //this is used to generate car image
   const carImg = {
     make: car.brand,
     model: car.model,
-    year: "2022"
+    year: car.year
   };
 
+  //on clicking book now it will redirect to booking form
   const handleBookNow = () => {
     setSelectedCar(car);
-    localStorage.setItem('selectedCarId', car.id);
-    navigate('/booking');
+    navigate(`/booking/${car.id}`);
   };
 
+  //on clicking update car it wiil redirect to update form
   const handleUpdateCar = () => {
     setSelectedCar(car);
-    localStorage.setItem('selectedCarId', car.id);
-    navigate('/update');
+    navigate(`/update/${car.id}`);
   };
 
+  //on clicking view details button it will redirect to details page
   const carDetails = () => {
     setSelectedCar(car);
-    const carId = localStorage.setItem('selectedCarId', car.id);
     navigate(`/cars/${car.id}`);
   };
 
   const handleDeleteCar = async () => {
     try {
-      const token = localStorage.getItem('token');
-      await axiosInstance.delete(`/api/cars/${car.id}`
-      //   , {
-      //   headers: { Authorization: `Bearer ${token}` },
-      // }
-    );
-      alert('Car deleted successfully!');
-      // window.location.reload();
+      await axiosInstance.delete(`/api/cars/${car.id}`);
+      toast.success('Car deleted successfully!');
       navigate('/cars'); // Redirect to the cars listing page after deletion
     } catch (error) {
       console.error(error.response.data);
-      alert(error.response.data);
+      toast.error(error.response.data);
     }
   };
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const result = await fetchCars(car.model);
-      console.log(car.model);
-      console.log(result);
-    };
-    fetchData();
-  }, []);
 
   return (
     <div className="bg-gray-800 shadow-md rounded-lg overflow-hidden flex flex-col" style={{ maxWidth: '350px', margin: '10px' }}>
       <div className="flex-1">
         <Carousel showThumbs={false} autoPlay infiniteLoop className="rounded-t-lg" style={{ height: '150px' }}>
           <div>
-            <img src={createCarImage(carImg, "", i)} alt="Car Image Angle 0" style={{ maxWidth: '100%', height: 'auto' }} />
+            <img src={createCarImage(carImg, "")} alt="Car Image Angle 0" style={{ maxWidth: '100%', height: 'auto' }} />
           </div>
           <div>
-            <img src={createCarImage(carImg, "13", i)} alt="Car Image Angle 13" style={{ maxWidth: '100%', height: 'auto' }} />
+            <img src={createCarImage(carImg, "13")} alt="Car Image Angle 13" style={{ maxWidth: '100%', height: 'auto' }} />
           </div>
           <div>
-            <img src={createCarImage(carImg, "29", i)} alt="Car Image Angle 29" style={{ maxWidth: '100%', height: 'auto' }} />
+            <img src={createCarImage(carImg, "29")} alt="Car Image Angle 29" style={{ maxWidth: '100%', height: 'auto' }} />
           </div>
         </Carousel>
        
@@ -107,7 +80,6 @@ const CarCard = ({ car }) => {
         <p className="mt-2 text-gray-300">Price Per Day: ₹{car.pricePerDay}</p>
         <p className="mt-2 text-gray-300">Status: {car.status}</p>
         <div className="mt-4 flex flex-wrap gap-2">
-          
           <button
             className="bg-gray-500 text-white py-2 px-4 rounded"
             onClick={carDetails}

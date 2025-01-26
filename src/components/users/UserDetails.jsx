@@ -3,17 +3,18 @@ import Navbar from '../landing/Navbar';
 import UserCard from './UserCard';
 import { AuthContext } from '../../context/AuthContext';
 import axiosInstance from '../../config/axiosConfig';
+import NotAuthorized from '../landing/NotAuthorized';
 
+//this is used to fetch all the users
 const UserDetails = () => {
   const { authState } = useContext(AuthContext);
-  const { role, token } = authState;
+  const { role} = authState;
   const [users, setUsers] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-      
         const response = await axiosInstance.get('/api/auth/' );
         setUsers(response.data);
       } catch (error) {
@@ -34,6 +35,11 @@ const UserDetails = () => {
     user.username.toLowerCase().includes(searchTerm.toLowerCase()) ||
     user.email.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+   //checking weather the user is authorised for this page
+   if(role!=='ADMIN'){
+    return <NotAuthorized/>
+  }
 
   return (
     <>

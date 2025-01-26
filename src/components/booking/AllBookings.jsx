@@ -20,11 +20,7 @@ const AllBookings = () => {
 
       try {
         const token = localStorage.getItem('token');
-        const response = await axiosInstance.get('/api/bookings/'
-        //   , {
-        //   headers: { Authorization: `Bearer ${token}` },
-        // }
-      );
+        const response = await axiosInstance.get('/api/bookings/');
         setBookings(response.data);
         console.log(response.data)
       

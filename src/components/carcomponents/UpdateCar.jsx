@@ -1,11 +1,19 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { CarContext } from '../../context/CarContext';
 import axiosInstance from '../../config/axiosConfig';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate,useParams } from 'react-router-dom';
+import NotAuthorized from '../landing/NotAuthorized';
+import { AuthContext } from '../../context/AuthContext';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
+
+
+//this component shows the update form
 const UpdateCar = () => {
-  const { setSelectedCar, updateCar } = useContext(CarContext);
-  const [selectedCar, setLocalSelectedCar] = useState(null);
+  const {  updateCar } = useContext(CarContext);
+  const [selectedCar, setSelectedCar] = useState(null);
+  const { carId } = useParams();
   const [carDetails, setCarDetails] = useState({
     brand: '',
     model: '',
@@ -14,31 +22,28 @@ const UpdateCar = () => {
     status: '',
   });
   const navigate = useNavigate();
+  const { authState } = useContext(AuthContext);
+  const {role} = authState;
 
+  //It gets the car details when page renders
   useEffect(() => {
     const fetchCarDetails = async () => {
-      const carId = localStorage.getItem('selectedCarId');
       if (!carId) {
         alert('No car selected');
         navigate('/cars'); // Redirect to cars page if no car is selected
         return;
       }
       try {
-        const token = localStorage.getItem('token');
-        const response = await axiosInstance.get(`/api/cars/${carId}`
-        //   , {
-        //   headers: { Authorization: `Bearer ${token}` },
-        // }
-      );
+        const response = await axiosInstance.get(`/api/cars/${carId}`);
         setSelectedCar(response.data);
-        setLocalSelectedCar(response.data);
         setCarDetails(response.data); // Pre-fill the form with existing car details
       } catch (err) {
         console.log(err);
       }
     };
     fetchCarDetails();
-  }, [navigate, setSelectedCar]);
+  }, [navigate]);
+
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -48,24 +53,24 @@ const UpdateCar = () => {
     }));
   };
 
+  //this method update the car data in form and redirects to cars page
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const token = localStorage.getItem('token');
-      const response = await axiosInstance.put(`/api/cars/${selectedCar.id}`, carDetails
-      //   , {
-      //   headers: { Authorization: `Bearer ${token}` },
-      // }
-    );
+      const response = await axiosInstance.put(`/api/cars/${selectedCar.id}`, carDetails);
       updateCar(response.data); // Update the context with the updated car details
-      alert('Car details updated successfully');
+      toast.success('Car details updated successfully');
       navigate('/cars'); // Redirect to the cars listing page after update
     } catch (err) {
       console.error(err);
-      alert('Failed to update car details');
+      toast.error('Failed to update car details');
     }
   };
-
+ 
+   //checking weather the user is authorised for this page
+   if(role!=='ADMIN'){
+    return <NotAuthorized/>
+  }
   return (
     selectedCar && (
       <div className="flex items-center justify-center min-h-screen">
@@ -73,6 +78,7 @@ const UpdateCar = () => {
           <h2 className="text-2xl font-bold text-center text-red-400">Update Car Details</h2>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
+              {/* car brand */}
               <label htmlFor="brand" className="block text-sm font-medium text-white">
                 Brand
               </label>
@@ -86,6 +92,7 @@ const UpdateCar = () => {
                 required
               />
             </div>
+            {/* car model */}
             <div>
               <label htmlFor="model" className="block text-sm font-medium text-white">
                 Model
@@ -100,6 +107,7 @@ const UpdateCar = () => {
                 required
               />
             </div>
+            {/* year */}
             <div>
               <label htmlFor="year" className="block text-sm font-medium text-white">
                 Year
@@ -114,6 +122,7 @@ const UpdateCar = () => {
                 required
               />
             </div>
+            {/* price */}
             <div>
               <label htmlFor="pricePerDay" className="block text-sm font-medium text-white">
                 Price Per Day
@@ -128,6 +137,7 @@ const UpdateCar = () => {
                 required
               />
             </div>
+            {/* status */}
             <div>
               <label htmlFor="status" className="block text-sm font-medium text-white">
                 Status
@@ -144,6 +154,7 @@ const UpdateCar = () => {
                 <option value="BOOKED">Booked</option>
               </select>
             </div>
+            {/* submit button */}
             <button
               type="submit"
               className="w-full py-2 mt-4 text-white bg-blue-600 rounded-md duration-300 hover:scale-90"
