@@ -36,7 +36,7 @@ const ReviewForm = () => {
           comment: formData.comment,
         });
 
-      navigate(`/booking`);
+      navigate(`/mybookings`);
 
     } catch (error) {
       setSubmitError('Failed to submit review. Please try again later.');

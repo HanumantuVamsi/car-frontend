@@ -50,6 +50,7 @@ const BookingCard = ({ booking, onCancel }) => {
       } else {
         alert('Failed to mark booking as Completed');
       }
+      navigate("/allbookings")
     } catch (error) {
       alert('Failed to mark booking as Completed');
     }

@@ -4,6 +4,7 @@ import UserCard from './UserCard';
 import { AuthContext } from '../../context/AuthContext';
 import axiosInstance from '../../config/axiosConfig';
 import NotAuthorized from '../landing/NotAuthorized';
+import { useNavigate } from 'react-router-dom';
 
 //this is used to fetch all the users
 const UserDetails = () => {
@@ -11,9 +12,15 @@ const UserDetails = () => {
   const { role} = authState;
   const [users, setUsers] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
+  const navigate  = useNavigate();
 
   useEffect(() => {
     const fetchUsers = async () => {
+      if (role !== 'ADMIN') {
+        // alert('You do not have permission to view this page');
+        navigate('/')
+        return;
+      }
       try {
         const response = await axiosInstance.get('/api/auth/' );
         setUsers(response.data);
@@ -37,9 +44,9 @@ const UserDetails = () => {
   );
 
    //checking weather the user is authorised for this page
-   if(role!=='ADMIN'){
-    return <NotAuthorized/>
-  }
+  //  if(role!=='ADMIN'){
+  //   return <NotAuthorized/>
+  // }
 
   return (
     <>

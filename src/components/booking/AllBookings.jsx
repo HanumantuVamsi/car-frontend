@@ -3,6 +3,7 @@ import { AuthContext } from '../../context/AuthContext';
 import axiosInstance from '../../config/axiosConfig';
 import Navbar from '../landing/Navbar';
 import BookingCard from './BookingCard';
+import { useNavigate } from 'react-router-dom';
 
 const AllBookings = () => {
   const { authState } = useContext(AuthContext);
@@ -10,16 +11,17 @@ const AllBookings = () => {
   const [bookings, setBookings] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('ALL');
+  const navigate  = useNavigate();
 
   useEffect(() => {
     const fetchBookings = async () => {
       if (role !== 'ADMIN') {
-        alert('You do not have permission to view this page');
+        // alert('You do not have permission to view this page');
+        navigate('/')
         return;
       }
 
       try {
-        const token = localStorage.getItem('token');
         const response = await axiosInstance.get('/api/bookings/');
         setBookings(response.data);
         console.log(response.data)
